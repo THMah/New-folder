@@ -1,6 +1,6 @@
 import cv2
 print(cv2.__version__)
-vidcap = cv2.VideoCapture('bus1_1s.mp4')
+vidcap = cv2.VideoCapture('bus5_1s.mp4')
 success, image = vidcap.read()
 count = 0
 success = True
