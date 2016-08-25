@@ -25,8 +25,10 @@ max_index = np.argmax(areas)
 cnt = contours[max_index]
 
 x, y, w, h = cv2.boundingRect(cnt)
-cv2.rectangle(crop_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+rectangle = cv2.rectangle(crop_img, (x - 70, y - 5), (x + w + 20, y + h + 5),
+    (0, 255, 0), 2)
 cv2.imshow("Show", crop_img)
-#cv2.imshow("Ori", img)
+#busLine = crop_img[rectangle]
+#cv2.imshow("Detected Bus Line", busLine)
 cv2.waitKey()
 cv2.destroyAllWindows()
