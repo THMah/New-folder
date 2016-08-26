@@ -28,7 +28,17 @@ x, y, w, h = cv2.boundingRect(cnt)
 rectangle = cv2.rectangle(crop_img, (x - 70, y - 5), (x + w + 20, y + h + 5),
     (0, 255, 0), 2)
 cv2.imshow("Show", crop_img)
-#busLine = crop_img[rectangle]
-#cv2.imshow("Detected Bus Line", busLine)
+#hard coded value to crop the bus line region
+busLine = crop_img[y: y + h + 5, x - 70: x + w + 10]
+
+#zooming in the image, better viewing
+resizeBusLine = cv2.resize(busLine, None, fx=2, fy=2,
+     interpolation=cv2.INTER_LINEAR)
+
+kernel = np.ones((1, 1), np.int8)
+#opening = cv2.morphologyEx(resizeBusLine, cv2.MORPH_OPEN, kernel)
+#erosion = cv2.erode(resizeBusLine,kernel,iterations = 3)
+#dilation = cv2.dilate(busLine, kernel, iterations=1)
+#cv2.imshow("Detected Bus Line", erosion)
 cv2.waitKey()
 cv2.destroyAllWindows()
