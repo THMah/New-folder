@@ -42,10 +42,14 @@ busLine = crop_img[y: y + h, x: x + w]
 resizeBusLine = cv2.resize(busLine, None, fx=3, fy=3,
      interpolation=cv2.INTER_LINEAR)
 
-kernel = np.ones((1, 1), np.int8)
-opening = cv2.morphologyEx(resizeBusLine, cv2.MORPH_OPEN, kernel)
+#2D filter
+kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+resizeBusLine = cv2.filter2D(resizeBusLine, -1, kernel)
+
+#kernel = np.ones((1, 1), np.int8)
+#opening = cv2.morphologyEx(resizeBusLine, cv2.MORPH_OPEN, kernel)
 #erosion = cv2.erode(resizeBusLine,kernel,iterations = 3)
 #dilation = cv2.dilate(busLine, kernel, iterations=1)
-cv2.imshow("Detected Bus Line", opening)
+cv2.imshow("Detected Bus Line", resizeBusLine)
 cv2.waitKey()
 cv2.destroyAllWindows()
