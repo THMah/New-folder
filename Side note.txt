@@ -1,3 +1,6 @@
 color to locate: 
 255 250 69
 255 166 121
+
+link for hsv value
+http://www.workwithcolor.com/red-color-hue-range-01.htm
