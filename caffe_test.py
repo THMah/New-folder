@@ -3,8 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import datetime
-import caffe
 import os
+#disable caffe log output :
+#0 - debug
+#1 - info (still a LOT of outputs)
+#2 - warnings
+#3 - errors
+os.environ['GLOG_minloglevel'] = '2'
+import caffe
 
 
 
@@ -16,7 +22,7 @@ LIVE_VIDEO_FRAME = '/home/th/Desktop/FYP_latest/New-folder/Live_video_frame'
 
 print 'capture video'
 #use 0 to capture live video / VideoPath to play local video
-cap = cv2.VideoCapture("/home/th/Desktop/1s_video/bus1.mp4")
+cap = cv2.VideoCapture("/home/th/Desktop/bus video oct/Editted/bus_771.mp4")
 #frame rate
 frameRate = cap.get(5)
 while(cap.isOpened()):
@@ -33,9 +39,9 @@ while(cap.isOpened()):
 cap.release()
 #end capture video and save as image
 
-for file in os.listdir(LIVE_VIDEO_FRAME):
+for file in sorted(os.listdir(LIVE_VIDEO_FRAME)):
     if file.endswith(".jpg"):
-
+        print(file)
         print 'set mode'
         #use GPU to do calculation
         caffe.set_mode_gpu()
@@ -49,16 +55,15 @@ for file in os.listdir(LIVE_VIDEO_FRAME):
                                channel_swap=(2, 1, 0),
                                raw_scale=255,
                                image_dims=(227, 227))
-        print 'input image'
         input_image = caffe.io.load_image(LIVE_VIDEO_FRAME + '/' + file)
-        print 'show image'
         plt.imshow(input_image)
         #predict takes any number of images, and formats them for the Caffe net automatically
         prediction = net.predict([input_image])
         #print 'prediction shape:', prediction[0].shape
-        plt.plot(prediction[0])
+        #plt.plot(prediction[0])
         output = ["770", "771", "SJ01", "No bus"]
         print 'predicted class:', output[prediction[0].argmax()]
         str1 = 'bus' + str(output[prediction[0].argmax()])
-        plt.text(2, 1, str1, fontsize=15)
+        #plt.text(2, 1, str1, fontsize=15)
+        plt.suptitle(str1, fontsize=15)
         plt.show()
