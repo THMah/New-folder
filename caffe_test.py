@@ -15,14 +15,13 @@ import caffe
 
 
 print 'load files'
-MODEL_FILE = "/home/th/Downloads/alexnet_models_3bus_100echo/deploy.prototxt"
-PRETRAINED = "/home/th/Downloads/alexnet_models_3bus_100echo/snapshot_iter_1800.caffemodel"
-IMAGE_FOLDER = "/home/th/Desktop/bus_771_test_caffe"
-LIVE_VIDEO_FRAME = '/home/th/Desktop/FYP_latest/New-folder/Live_video_frame'
+MODEL_FILE = "/home/th/Desktop/FYP_latest/BusDetector/FYP Alexnet/alexnet_jpg_30ep_001lr/deploy.prototxt"
+PRETRAINED = "/home/th/Desktop/FYP_latest/BusDetector/FYP Alexnet/alexnet_jpg_30ep_001lr/snapshot_iter_330.caffemodel"
+LIVE_VIDEO_FRAME = '/home/th/Desktop/FYP_latest/BusDetector/Live_video_frame'
 
 print 'capture video'
 #use 0 to capture live video / VideoPath to play local video
-cap = cv2.VideoCapture("/home/th/Desktop/bus video oct/Editted/bus_771.mp4")
+cap = cv2.VideoCapture("/home/th/Desktop/FYP_latest/BusDetector/bus video oct/Editted/bus_sj01_4.mp4")
 #frame rate
 frameRate = cap.get(5)
 while(cap.isOpened()):
@@ -51,19 +50,23 @@ for file in sorted(os.listdir(LIVE_VIDEO_FRAME)):
 
         print 'load pretrained'
         net = caffe.Classifier(MODEL_FILE, PRETRAINED,
+                                image_dims=(227, 227),
+                                raw_scale=255,
+                                 mean=np.load("/home/th/Desktop/FYP_latest/BusDetector/FYP Alexnet/alexnet_jpg_30ep_001lr/mean.npy").mean(1).mean(1),
                                 #RGB to BGR
-                               channel_swap=(2, 1, 0),
-                               raw_scale=255,
-                               image_dims=(227, 227))
+                                #caffe input expected BGR input
+                               channel_swap=(2, 1, 0))
+        #this function load img in RGB
         input_image = caffe.io.load_image(LIVE_VIDEO_FRAME + '/' + file)
         plt.imshow(input_image)
         #predict takes any number of images, and formats them for the Caffe net automatically
         prediction = net.predict([input_image])
+        print(prediction)
         #print 'prediction shape:', prediction[0].shape
         #plt.plot(prediction[0])
-        output = ["770", "771", "SJ01", "No bus"]
+        output = ["771", "SJ01", "No bus"]
         print 'predicted class:', output[prediction[0].argmax()]
-        str1 = 'bus' + str(output[prediction[0].argmax()])
+        str1 = 'bus: ' + str(output[prediction[0].argmax()])
         #plt.text(2, 1, str1, fontsize=15)
         plt.suptitle(str1, fontsize=15)
         plt.show()
